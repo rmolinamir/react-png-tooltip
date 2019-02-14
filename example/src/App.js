@@ -44,7 +44,9 @@ export default class App extends Component {
         <div className='Center'>
           <Tooltip className='OrangeTooltip' background='#ff7043'>
             <h1>GOT YOU!</h1>
-            <iframe type="text/html" 
+            <iframe 
+                title='rickroll'
+                type="text/html" 
                 width='100%'
                 height='400px'
                 src="https://www.youtube.com/embed/DLzxrzFCyOs?autoplay=1"
@@ -53,8 +55,8 @@ export default class App extends Component {
           </Tooltip>
         </div>
         <div className='CenterRight'>
-          <Tooltip tooltip={<img className='CatTooltip' src='https://i.chzbgr.com/full/9112752128/h94C6655E/' />}>
-            <img src='https://boygeniusreport.files.wordpress.com/2016/05/scared-surprised-cat-face.jpg?quality=98&strip=all&w=782' />
+          <Tooltip tooltip={<img alt='' className='CatTooltip' src='https://i.chzbgr.com/full/9112752128/h94C6655E/' />}>
+            <img alt='' src='https://boygeniusreport.files.wordpress.com/2016/05/scared-surprised-cat-face.jpg?quality=98&strip=all&w=782' />
           </Tooltip>
         </div>
 
@@ -73,7 +75,7 @@ export default class App extends Component {
                 style={{color: 'white'}} 
                 href='https://github.com/rmolinamir'
                 target='_blank'
-                ref='noopener noreferrer'>
+                rel="noopener noreferrer">
                 https://github.com/rmolinamir
               </a>
             </strong>
