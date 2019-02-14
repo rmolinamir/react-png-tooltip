@@ -14,7 +14,7 @@ npm install --save react-png-tooltip
 
 ### Anything Goes!
 
-![Alt Text](https://i.gyazo.com/2fc9c28b7e50230f028ab68046ddb9d5.mp4)
+![Alt Text](https://media.giphy.com/media/5wFUxVXPVin00YoI8x/giphy.gif)
 
 ## Instructions
 
@@ -49,6 +49,8 @@ Props               |       Functionality
 
 ## Basic Usage
 
+[![Edit React Plug-N'-Go Tooltip](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xoy31rxo)
+
 ```jsx
 import React, { Component } from 'react'
 
@@ -64,6 +66,8 @@ const component = () => {
 ```
 
 ## Passing a CSS class
+
+[![Edit React Plug-N'-Go Tooltip](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xoy31rxo)
 
 ```css
 .IndianredTooltip {
@@ -108,6 +112,8 @@ const component = () => {
 ```
 
 ## Passing a custom tooltip button
+
+[![Edit React Plug-N'-Go Tooltip](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xoy31rxo)
 
 ### Note that you can also pass classes to the Tooltip as normal, or modify the default icon's fill and background.
 
