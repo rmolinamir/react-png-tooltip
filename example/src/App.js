@@ -20,7 +20,7 @@ export default class App extends Component {
           <Tooltip>
             <img src='https://media0.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif?cid=3640f6095c64ef4962526264678e1c1c' alt='' />
             <br/>
-            That was me while programming this component.
+            Accurate representation of me while programming this component.
             <br/>
             <strong>(This is just to show you anything goes inside the tooltips)</strong>
           </Tooltip>
@@ -28,6 +28,8 @@ export default class App extends Component {
 
         <div className='North'>
           <Tooltip>
+            <strong>This is the default color setting for the tooltips.</strong>
+            <br />
             'North' positioned for lack of a better term, see how it defaults to the left?
             <br/>
             Unless you're on mobile, meaning it should be centered!
