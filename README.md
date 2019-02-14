@@ -19,9 +19,11 @@ npm install --save react-png-tooltip
 ## Instructions
 
 1. Export the tooltip from the 'react-png-tooltip' and you're good to go!
-2. The tooltip will close after:
+
+The tooltip will close after:
 - Clicking (or touching) the tooltip button.
-3. The tooltip will close after:
+
+The tooltip will close after:
 - Pressing the ESC key on desktop.
 - Clicking (or touching) anywhere on the screen unless it's inside the tooltip window.
 - Clicking (or touching) the X button inside the tooltip window.
@@ -33,7 +35,7 @@ npm install --save react-png-tooltip
 2. You can place it anywhere on your DOM tree.
 3. Can handle any type of children. It has a set width of 380px **and a max-width of 80vw**, this can't be changed for the time being.
 4. **Smart-Potisioning** (illustration below), the tooltip is programmed to determine its initial rendering position and will make calculations depending on where it is, the viewport and its width to avoid overflowing outside the viewport.
-5. Tooltip window's CSS may be changed without disrupting the functionality of the component (**don't change the positions, if you want something absolutely position then do it through an inner div**).
+5. Tooltip window's CSS may be changed without disrupting the functionality of the component (**don't change the position CSS, if you want something that is not relatively positioned then do it through an inner div**).
 6. Instead of using the default tooltip button, you can pass your own buttons through a prop named **tooltip**, usage example and more props information below.
 
 ![**Smart-Potisioning Illustration Example**](https://i.imgur.com/Bl6jZlD.jpg)
