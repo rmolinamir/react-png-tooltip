@@ -59,7 +59,8 @@ export default class App extends Component {
         </div>
 
         <div className='BottomLeft'>
-          <Tooltip background='skyblue' fill='white' className='DarkTooltip'>Dark Tooltip!</Tooltip> This one's a dark tooltip!
+          <Tooltip background='skyblue' fill='white' className='DarkTooltip'>Dark Tooltip!</Tooltip>
+          <span style={{zIndex: -1}}>This one's a dark tooltip!</span>
         </div>
         <div className='BottomRight'>
           <Tooltip className='OrangeTooltip' background='#ff7043'>

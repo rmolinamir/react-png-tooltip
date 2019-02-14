@@ -6,6 +6,7 @@
     animation: fade-in ease 150ms;
     background-color: #FFF;
     color: #484848;
+    border-color: rgb(235, 235, 235);
     fill: #484848;
 }
 
@@ -23,7 +24,7 @@
     width: 380px;
     max-width: 80vw;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px;
-    border: 1px solid rgb(235, 235, 235);
+    border: 1px solid inherit;
     border-radius: 5px;
     background: inherit;
     color: inherit;
