@@ -1,0 +1,89 @@
+.App {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150vh;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.TopLeft {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+}
+
+.TopCenter {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.North {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+}
+
+.TopRight {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+
+.CenterLeft {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 24px;
+}
+
+.Center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.CenterRight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 24px;
+}
+
+.BottomLeft {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.BottomRight {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+}
+
+.DarkTooltip {
+  background-color: #333 !important;
+  color: #FFF !important;
+  fill: #FFF !important;
+}
+
+.IndianredTooltip {
+  background-color: #cd5c5c !important;
+  color: #FFF !important;
+  fill: #FFF !important;
+}
+
+.GoldTooltip {
+  background-color: gold !important;
+  color: #FFF !important;
+  fill: #FFF !important;
+}

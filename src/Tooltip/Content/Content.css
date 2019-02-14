@@ -1,0 +1,80 @@
+.Wrapper {
+    display: inline;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: fade-in ease 150ms;
+    background-color: #FFF;
+    color: #484848;
+    fill: #484848;
+}
+
+.Wrapper:focus,
+.Wrapper .Triangler:focus,
+.Wrapper .Container:focus {
+  outline: none;
+}
+
+.Container {
+    position: absolute;
+    z-index: 5;
+    padding: 12px 24px 12px 12px;
+    display: inline-block;
+    width: 380px;
+    max-width: 80vw;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px;
+    border: 1px solid rgb(235, 235, 235);
+    border-radius: 5px;
+    background: inherit;
+    color: inherit;
+    border-image: initial;
+}
+
+.Cancel {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.Cancel svg {
+  width: 12px;
+  height: 12px;
+}
+
+.Content {
+  padding-right: 21px;
+  overflow-wrap: break-word;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.25em;
+  color: inherit;
+  margin: 0px;
+  user-select: text;
+  cursor: auto;
+}
+
+.Triangle {
+    position: absolute;
+    width: auto!important;
+    height: auto!important;
+    left: 100%;
+    z-index: 10;
+    transform: rotate(180deg);
+    fill: inherit;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
