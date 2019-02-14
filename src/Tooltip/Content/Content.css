@@ -2,7 +2,7 @@
     display: inline;
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
     animation: fade-in ease 150ms;
     background-color: #FFF;
     color: #484848;
@@ -32,8 +32,8 @@
 
 .Cancel {
   position: absolute;
-  top: 4px;
-  right: 6px;
+  top: 5px;
+  right: 10px;
   background: none;
   color: inherit;
   border: none;
@@ -60,11 +60,15 @@
   cursor: auto;
 }
 
+.Content * {
+  max-width: 100%;
+}
+
 .Triangle {
     position: absolute;
     width: auto!important;
     height: auto!important;
-    left: 100%;
+    left: -12px;
     z-index: 10;
     transform: rotate(180deg);
     fill: inherit;

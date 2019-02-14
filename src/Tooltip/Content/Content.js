@@ -46,7 +46,6 @@ const content = (props) => {
     <React.Fragment>
       <div tabIndex='1'
         ref={props.reference}
-        onBlur={props.closeTooltip}
         className={wrapperClasses.join(' ')}
         style={props.style}>
         <div

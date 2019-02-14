@@ -17,18 +17,19 @@ const QUARTERS = {
 
 export default class Tooltip extends Component {
   static propTypes = {
-    className: PropTypes.any,
     // Tooltip propTypes (style and JSX element replacement)
     tooltip: PropTypes.element,
     fill: PropTypes.string,
     background: PropTypes.string,
-    containerClassname: PropTypes.string,
+    className: PropTypes.string,
     children: PropTypes.any
   }
 
   constructor(props) {
     super(props)
+    // Boolean, true if on a mobile device.
     this.isMobile = isMobile()
+    // References, cries in React Hooks.
     this.myTooltip = React.createRef()
     this.myWrapper = React.createRef()
     this.myContent = React.createRef()
@@ -36,7 +37,8 @@ export default class Tooltip extends Component {
   }
 
   state = { // Initial state
-    bIsHidden: true
+    bIsHidden: true,
+    bIsHovered: false
   }
 
   /**
@@ -67,21 +69,21 @@ export default class Tooltip extends Component {
       case QUARTERS.TOP_LEFT:
         // Container position
         this.myContent.current.style.top = [36, 'px'].join('')
-        this.myContent.current.style.left = [-12, 'px'].join('')
+        this.myContent.current.style.left = [-18, 'px'].join('')
         // Triangle position
         this.myTriangle.current.style.top = [13, 'px'].join('')
         break
       case QUARTERS.TOP_RIGHT:
         // Container position
         this.myContent.current.style.top = [36, 'px'].join('')
-        this.myContent.current.style.right = [-36, 'px'].join('')
+        this.myContent.current.style.right = [-18, 'px'].join('')
         // Triangle position
         this.myTriangle.current.style.top = [13, 'px'].join('')
         break
       case QUARTERS.BOTTOM_LEFT:
         // Container position
         this.myContent.current.style.bottom = [24, 'px'].join('')
-        this.myContent.current.style.left = [-12, 'px'].join('')
+        this.myContent.current.style.left = [-18, 'px'].join('')
         // Triangle position
         this.myTriangle.current.style.bottom = [1, 'px'].join('')
         this.myTriangle.current.style.transform = 'none'
@@ -89,7 +91,7 @@ export default class Tooltip extends Component {
       case QUARTERS.BOTTOM_RIGHT:
         // Container position
         this.myContent.current.style.bottom = [24, 'px'].join('')
-        this.myContent.current.style.right = [-36, 'px'].join('')
+        this.myContent.current.style.right = [-18, 'px'].join('')
         // Triangle position
         this.myTriangle.current.style.bottom = [1, 'px'].join('')
         this.myTriangle.current.style.transform = 'none'
@@ -98,7 +100,7 @@ export default class Tooltip extends Component {
         // Copying QUARTERS.BOTTOM_LEFT settings for the default case.
         // Container position
         this.myContent.current.style.bottom = [24, 'px'].join('')
-        this.myContent.current.style.left = [-12, 'px'].join('')
+        this.myContent.current.style.left = [-18, 'px'].join('')
         // Triangle position
         this.myTriangle.current.style.bottom = [1, 'px'].join('')
         this.myTriangle.current.style.transform = 'none'
@@ -114,9 +116,10 @@ export default class Tooltip extends Component {
     if (!rect) { return } // Avoid crashes
     const viewportX = Math.max(document.documentElement.clientWidth || 0)
     const contentRect = this.myContent.current.getBoundingClientRect()
-    const bIsOverflown = (contentRect.width + contentRect.left) >= viewportX
-    if (bIsOverflown) {
+    if ((contentRect.width + contentRect.left) >= viewportX) { // Right Side
       this.myContent.current.style.transform = `translateX(-${contentRect.right - contentRect.width - 12}px)`
+    } else if (contentRect.left < 0) { // Left Side
+      this.myContent.current.style.transform = `translateX(${Math.abs(contentRect.left) + 12}px)`
     }
   }
 
@@ -145,8 +148,35 @@ export default class Tooltip extends Component {
    * When on mobile, if an orientation change event happens, close the modal to avoid bugs.
    */
   componentDidMount() {
+    window.addEventListener('resize', this.closeTooltip)
     if (this.isMobile) {
       window.addEventListener('orientationchange', this.closeTooltip)
+    }
+  }
+
+  /**
+   * Adds or removes event listeners, depending if on a mobile or on a desktop.
+   */
+  eventListenersHandler = (handler) => {
+    switch (handler) {
+      case 'ADD':
+        if (this.isMobile) {
+          document.addEventListener('touchend', this.outsideClickListener)
+        } else if (!this.isMobile) {
+          document.addEventListener('click', this.outsideClickListener)
+          document.addEventListener('keydown', this.escFunction, false)
+        }
+        break
+      case 'REMOVE':
+        if (this.isMobile) {
+          document.removeEventListener('touchend', this.outsideClickListener)
+        } else if (!this.isMobile) {
+          document.removeEventListener('click', this.outsideClickListener)
+          document.removeEventListener('keydown', this.escFunction, false)
+        }
+        break
+      default:
+        // do nothing
     }
   }
 
@@ -155,17 +185,15 @@ export default class Tooltip extends Component {
      * If the tooltip is active, then calculate then:
      * 1. Calculate then .focus() the wrapper element to open the tooltip.
      * 2. Calculate the position (position: absolute coordinates).
-     * 3. If not on a mobile device, apply escFunction event listener that closes the tooltip on key down.
+     * 3. Applies or removes event listeners that manage the tooltip.
      */
     if (!this.state.bIsHidden) {
       this.myWrapper.current.focus()
       this.calculatePosition()
-      if (!this.isMobile) {
-        document.addEventListener('keydown', this.escFunction, false)
-      }
+      this.eventListenersHandler('ADD')
     // Removes the event listener if the tooltip is being hidden.
-    } else if (!this.isMobile) {
-      document.removeEventListener('keydown', this.escFunction, false)
+    } else {
+      this.eventListenersHandler('REMOVE')
     }
   }
 
@@ -173,9 +201,10 @@ export default class Tooltip extends Component {
     // Remove any event listener that might be active.
     if (this.isMobile) {
       window.removeEventListener('orientationchange', this.closeTooltip)
-    } else {
-      document.addEventListener('keydown', this.escFunction, false)
     }
+    window.remove('resize', this.closeTooltip)
+    // Document event listeners.
+    this.eventListenersHandler('REMOVE')
   }
 
   toggleTooltip = () => {
@@ -187,11 +216,22 @@ export default class Tooltip extends Component {
   }
 
   closeTooltip = () => {
-    setTimeout(() => {
-      this.setState({
-        bIsHidden: true
-      })
-    }, 300000000)
+    this.setState({
+      bIsHidden: true
+    })
+  }
+
+  /**
+   * Closes the tooltip as long as the click was made outside of the tooltip wrapper.
+   * The wrapper contains:
+   * 1. The tooltip button.
+   * 2. The tooltip window.
+   */
+  outsideClickListener = event => {
+    const element = this.myTooltip.current
+    if (!element.contains(event.target) && isVisible(element)) {
+      this.closeTooltip()
+    }
   }
 
   // Close the tooltip when the ESC is pressed.
@@ -204,7 +244,7 @@ export default class Tooltip extends Component {
   render() {
     return (
       <div ref={this.myTooltip}
-        className={this.props.className ? this.props.className : classes.Container}>
+        className={this.props.tooltip ? null : classes.Container}>
         <i
           /**
           * onMouseDown event fires before onBlur event on input. It calls event.preventDefault() to
@@ -222,8 +262,8 @@ export default class Tooltip extends Component {
         {this.state.bIsHidden ? null
           : (
             <Content
+              className={this.props.className}
               onMount={this.calculatePosition}
-              className={this.props.containerClassname}
               reference={this.myWrapper}
               contentReference={this.myContent}
               triangleReference={this.myTriangle}
@@ -235,3 +275,8 @@ export default class Tooltip extends Component {
     )
   }
 }
+
+/**
+ * If an element is visible.
+ */
+const isVisible = elem => !!elem && !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length)

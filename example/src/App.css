@@ -36,7 +36,7 @@
 
 .CenterLeft {
   position: absolute;
-  top: 50%;
+  top: 42.5%;
   transform: translateY(-50%);
   left: 24px;
 }
@@ -86,4 +86,38 @@
   background-color: gold !important;
   color: #FFF !important;
   fill: #FFF !important;
+}
+
+.OrangeTooltip {
+  background-color: #ff7043 !important;
+  color: #FFF !important;
+  fill: #FFF !important;
+}
+
+.CustomButton {
+  position: relative;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  font: inherit;
+  width: fit-content;
+  user-select: none;
+  border: 1px solid transparent;
+  line-height: 1.5;
+  border-radius: .25rem;
+  font-weight: 600;
+  font-weight: var(--font-bold-font-weight,600);
+  padding: 10px 17px;
+  padding: var(--spacing-button-vertical,10px) var(--spacing-button-horizontal,17px);
+  box-shadow: none;
+  box-shadow: var(--shadow-button-level0-box-shadow,none);
+  transition: background-color .1s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,opacity .15s;
+  background-color: #ff7043;
+  max-width: 150px;
+}
+
+.CatTooltip {
+  cursor: pointer;
+  width: 124px;
+  border-radius: 50%;
 }
