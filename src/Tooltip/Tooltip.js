@@ -31,7 +31,7 @@ export default class Tooltip extends Component {
     this.isMobile = isMobile()
     // References, cries in React Hooks.
     this.myTooltip = React.createRef()
-    this.myWrapper = React.createRef();
+    this.myWrapper = React.createRef()
     this.myContent = React.createRef()
     this.myTriangle = React.createRef()
   }
