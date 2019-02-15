@@ -135,11 +135,6 @@ const component = () => {
 }
 ```
 
-## Pending
-
-- Allow more styling changes to the tooltip window (like width). 
-- Opening on hover without modifying current functionality. 
-
 ## License
 
 MIT © [rmolinamir](https://github.com/rmolinamir)
