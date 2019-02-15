@@ -3,6 +3,7 @@
     position: absolute;
     top: 0;
     left: 50%;
+    z-index: 10;
     animation: fade-in ease 150ms;
     background-color: #FFF;
     color: #484848;
@@ -57,7 +58,6 @@
   line-height: 1.25em;
   color: inherit;
   margin: 0px;
-  user-select: text;
   cursor: auto;
 }
 

@@ -1,0 +1,12 @@
+.Container {
+  position: relative;
+  display: inline-flex;
+  width: 24px;
+  height: 21px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.Container svg {
+  cursor: pointer;
+}

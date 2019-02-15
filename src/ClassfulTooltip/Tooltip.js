@@ -8,13 +8,6 @@ import classes from './Tooltip.css'
 import QuestionMark from './SVG/question-mark'
 import Content from './Content/Content'
 
-const QUARTERS = {
-  TOP_LEFT: 'top_left',
-  TOP_RIGHT: 'top_right',
-  BOTTOM_LEFT: 'bottom_left',
-  BOTTOM_RIGHT: 'bottom_right'
-}
-
 export default class Tooltip extends Component {
   static propTypes = {
     // Tooltip propTypes (style and JSX element replacement)
@@ -22,6 +15,9 @@ export default class Tooltip extends Component {
     fill: PropTypes.string,
     background: PropTypes.string,
     className: PropTypes.string,
+    // Tooltip functionality
+    shouldDisableHover: PropTypes.bool,
+    shouldDisableClick: PropTypes.bool,
     children: PropTypes.any
   }
 
@@ -34,11 +30,13 @@ export default class Tooltip extends Component {
     this.myWrapper = React.createRef()
     this.myContent = React.createRef()
     this.myTriangle = React.createRef()
+    // Hover timeout to unmount tooltip.
+    this.onMouseLeaveTimeout = null
   }
 
   state = { // Initial state
     bIsHidden: true,
-    bIsHovered: false
+    bIsNotHovered: true
   }
 
   /**
@@ -180,14 +178,27 @@ export default class Tooltip extends Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(_, prevState) {
+    /**
+     * The tooltip should only recalculate if the tooltip was hidden in the previous state, meaning
+     * it will only recalculate only if it's re-mounting. bIsHidden is given priority in case the
+     * user clicked the tooltip.
+     */
+    let bWasShown = false
+    if (!prevState.bIsNotHovered) {
+      bWasShown = true
+    } else if (!prevState.bIsHidden) {
+      bWasShown = true
+    }
+    if (bWasShown) { return }
     /**
      * If the tooltip is active, then calculate then:
      * 1. Calculate then .focus() the wrapper element to open the tooltip.
      * 2. Calculate the position (position: absolute coordinates).
      * 3. Applies or removes event listeners that manage the tooltip.
      */
-    if (!this.state.bIsHidden) {
+    if (!this.state.bIsHidden || !this.state.bIsNotHovered) {
+      if (!this.myWrapper.current) { return } // Protection
       this.myWrapper.current.focus()
       this.calculatePosition()
       this.eventListenersHandler('ADD')
@@ -205,9 +216,49 @@ export default class Tooltip extends Component {
     window.removeEventListener('resize', this.closeTooltip)
     // Document event listeners.
     this.eventListenersHandler('REMOVE')
+    // Clearing timeout on mouse leave event.
+    clearTimeout(this.onMouseLeaveTimeout)
+  }
+
+  /**
+   * If the user is hovering the tooltip then open it, otherwise close it UNLESS the user clicked on the tooltip.
+   */
+  onHoverHandler = (handler, event) => {
+    // Disabled on mobile devices (no hover) or if the shouldDisableHover prop is true.
+    if (this.isMobile || this.props.shouldDisableHover) { return }
+    if (!handler) {
+      // Clearing timeout on mouse leave event.
+      clearTimeout(this.onMouseLeaveTimeout)
+      this.onMouseLeaveTimeout = null
+      this.setState({
+        bIsNotHovered: handler
+      })
+    } else {
+      /**
+       * Event persist is called to avoid receiving null events if the component dismounts.
+       * We declare X and Y positions to know where is the mouse pointer hovering. The result of this
+       * boolean will be stored in bIsHoveringTooltip. Next, this.onMouseLeaveTimeout will fire within
+       * 100ms, these 100ms will let the user have some time to hover the tooltip. IF the user hovers
+       * over the tooltip bIsHoveringTooltip will be true and the tooltip won't be dismounted, however
+       * if the user pulls the mouse away from the tooltip the tooltip will be dismounted.
+       */
+      event.persist()
+      const x = event.clientX
+      const y = event.clientY
+      const bIsHoveringTooltip = this.myTooltip.current.contains(document.elementFromPoint(x, y))
+      if (!bIsHoveringTooltip) {
+        this.onMouseLeaveTimeout = setTimeout(() => {
+          this.setState({
+            bIsNotHovered: handler
+          })
+        }, 100)
+      }
+    }
   }
 
   toggleTooltip = () => {
+    // Disabled if the shouldDisableHover prop is true.
+    if (this.props.shouldDisableClick) { return }
     this.setState(prevState => {
       return {
         bIsHidden: !prevState.bIsHidden
@@ -216,8 +267,11 @@ export default class Tooltip extends Component {
   }
 
   closeTooltip = () => {
+    // Disabled if the shouldDisableHover prop is true.
+    if (this.props.shouldDisableClick) { return }
     this.setState({
-      bIsHidden: true
+      bIsHidden: true,
+      bIsNotHovered: true
     })
   }
 
@@ -241,10 +295,31 @@ export default class Tooltip extends Component {
     }
   }
 
+  /**
+   * Optimization, only update virtual DOM if there is a change in bIsHidden or bIsNotHovered.
+   */
+  shouldComponentUpdate(_, nextState) {
+    return this.state.bIsHidden !== nextState.bIsHidden || this.state.bIsNotHovered !== nextState.bIsNotHovered
+  }
+
   render() {
+    /**
+     * The tooltip content will render if bIsHidden if false or if the tooltip is not hovered.
+     * This means that bIsHidden being true will have priority, which means if the user clicks the tooltip,
+     * then it won't be unmounted when unhovering the tooltip.
+     */
+    let shouldRender = false
+    if (!this.state.bIsHidden) {
+      shouldRender = true
+    } else if (!this.state.bIsNotHovered) {
+      shouldRender = true
+    }
     return (
       <div ref={this.myTooltip}
-        className={this.props.tooltip ? null : classes.Container}>
+        className={this.props.tooltip ? null : classes.Container}
+        // On mouse hover handlers.
+        onMouseOver={() => this.onHoverHandler(false)}
+        onMouseLeave={(event) => this.onHoverHandler(true, event)}>
         <i
           /**
           * onMouseDown event fires before onBlur event on input. It calls event.preventDefault() to
@@ -259,18 +334,16 @@ export default class Tooltip extends Component {
               <QuestionMark fill={this.props.fill} background={this.props.background} />
             )}
         </i>
-        {this.state.bIsHidden ? null
-          : (
-            <Content
-              className={this.props.className}
-              onMount={this.calculatePosition}
-              reference={this.myWrapper}
-              contentReference={this.myContent}
-              triangleReference={this.myTriangle}
-              closeTooltip={this.closeTooltip} >
-              {this.props.children}
-            </Content>
-          )}
+        {shouldRender ? (
+          <Content
+            className={this.props.className}
+            reference={this.myWrapper}
+            contentReference={this.myContent}
+            triangleReference={this.myTriangle}
+            closeTooltip={this.closeTooltip} >
+            {this.props.children}
+          </Content>)
+          : null}
       </div>
     )
   }
@@ -280,3 +353,10 @@ export default class Tooltip extends Component {
  * If an element is visible.
  */
 const isVisible = elem => !!elem && !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length)
+
+const QUARTERS = {
+  TOP_LEFT: 'top_left',
+  TOP_RIGHT: 'top_right',
+  BOTTOM_LEFT: 'bottom_left',
+  BOTTOM_RIGHT: 'bottom_right'
+}

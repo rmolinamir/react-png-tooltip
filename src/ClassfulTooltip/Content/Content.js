@@ -16,7 +16,7 @@ const Triangle = (props) => {
       width='24px'
       height='24px'
       viewBox='0 0 20 20'
-      style={{enableBackground: 'new 0 0 20 20'}}>
+      style={{ enableBackground: 'new 0 0 20 20' }}>
       <path fill='inherit' d='M0,0 20,0 10,10z' />
       <path fill='transparent' stroke='#E6E6E6' d='M0,0 10,10 20,0' />
     </svg>
@@ -30,10 +30,6 @@ Triangle.propTypes = {
 }
 
 const content = (props) => {
-  if (props.onMount) { // Calculates positioning when Tooltip is rendered.
-    props.onMount()
-  }
-
   const wrapperClasses = [classes.Wrapper]
   if (props.className) {
     wrapperClasses.push(props.className)
@@ -65,8 +61,6 @@ const content = (props) => {
 content.propTypes = {
   // Triangle reference classes
   triangleReference: propTypes.object,
-  // Recalculates the position after mounting
-  onMount: propTypes.func,
   // Wrapper content events
   closeTooltip: propTypes.func,
   // Wrapper classes

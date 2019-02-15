@@ -25,7 +25,7 @@ module.exports = {
         test: /\.css$/,
         exclude: /node_modules/,
         use: [
-          {loader: 'style-loader'},
+          { loader: 'style-loader' },
           {
             loader: 'css-loader',
             options: {
@@ -59,5 +59,21 @@ module.exports = {
   // This line is just to use the React dependency of our parent-testing-project instead of using our own React.
   externals: {
     'react': 'commonjs react'
+  },
+  stats: {
+    colors: true,
+    hash: false,
+    version: false,
+    timings: false,
+    assets: false,
+    chunks: false,
+    modules: false,
+    reasons: false,
+    children: false,
+    source: false,
+    errors: false,
+    errorDetails: false,
+    warnings: false,
+    publicPath: false
   }
 }
