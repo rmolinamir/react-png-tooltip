@@ -1,4 +1,4 @@
-{
+module.exports = {
   "parser": "babel-eslint",
   "extends": [
     "standard",
@@ -20,4 +20,4 @@
     // allow specifying true explicitly for boolean props
     "react/jsx-boolean-value": 0
   }
-}
+};
