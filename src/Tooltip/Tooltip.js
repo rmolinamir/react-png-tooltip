@@ -202,7 +202,7 @@ export default class Tooltip extends Component {
     if (this.isMobile) {
       window.removeEventListener('orientationchange', this.closeTooltip)
     }
-    window.remove('resize', this.closeTooltip)
+    window.removeEventListener('resize', this.closeTooltip)
     // Document event listeners.
     this.eventListenersHandler('REMOVE')
   }
