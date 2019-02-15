@@ -19,13 +19,14 @@ npm install --save react-png-tooltip
 ## Instructions
 
 1. Export the tooltip from the 'react-png-tooltip' and you're good to go!
-2. The tooltip will close after:
+2. The tooltip will open after:
 - Clicking (or touching) the tooltip button.
+- Hovering over the tooltip button.
 3. The tooltip will close after:
 - Pressing the ESC key on desktop.
 - Clicking (or touching) anywhere on the screen unless it's inside the tooltip window.
 - Clicking (or touching) the X button inside the tooltip window.
-- Clicking (or touching) the tooltip button.
+- On mouse leave IF the user has not clicked the tooltip (meaning, if the user was only hovering), in which case the user would have to click the cancel button, the ESC key, or anywhere on the screen to close the tooltip.
 
 ## Features
 
@@ -35,21 +36,26 @@ npm install --save react-png-tooltip
 4. **Smart-Potisioning** (illustration below), the tooltip is programmed to determine its initial rendering position and will make calculations depending on where it is, the viewport and its width to avoid overflowing outside the viewport.
 5. Tooltip window's CSS may be changed without disrupting the functionality of the component (**don't change the positions, if you want something absolutely position then do it through an inner div**).
 6. Instead of using the default tooltip button, you can pass your own buttons through a prop named **tooltip**, usage example and more props information below.
+7. Clicking and hovering functionalities may be disabled by passing `shouldDisableClick` and `shouldDisableHover` props respectively to the tooltip.
 
 ![**Smart-Potisioning Illustration Example**](https://i.imgur.com/Bl6jZlD.jpg)
 
 ## Props
 
-Props               |       Functionality
--------------       |       -------------
-`tooltip`           |       Your custom JSX button that will toggle the tooltip window, **must be JSX**.
-`fill`              |       The fill prop will change the default icon **question-mark** color, e.g. `'#484848'` or `'red'` **(must be a string)**.
-`background`        |       The background prop will change the default icon background color, e.g. `'#0000FF'` or `'blue'` **(must be a string)**.
-`className`         |       You can use your own desired CSS class for the tooltip window by passing said class as a prop, **however, it is highly advised to only modify background-color, color, fill, border-colors, etc (aesthetics). Modifying width nor any similar properties is not recommended.** Usage examples below.
+Props                   |         Functionality
+-------------           |         -------------
+`shouldDisableHover`    |         Disables hovering functionality, the tooltips will only render upon clicking the tooltip.
+`shouldDisableClick`    |         Disables clicking functionality, the tooltips will only render upon hovering the tooltip. If passed as true, then the tooltip's cancel button will **not** be rendered.
+`tooltip`               |         Your custom JSX button that will toggle the tooltip window, **must be JSX**.
+`fill`                  |         The fill prop will change the default icon **question-mark** color, e.g. `'#484848'` or `'red'` **(must be a string)**.
+`background`            |         The background prop will change the default icon background color, e.g. `'#0000FF'` or `'blue'` **(must be a string)**.
+`className`             |         You can use your own desired CSS class for the tooltip window by passing said class as a prop, **however, it is highly advised to only modify background-color, color, fill, border-colors, etc (aesthetics). Modifying width nor any similar properties is not recommended.** Usage examples below.
 
-## Basic Usage
+## CodeSandbox
 
 [![Edit React Plug-N'-Go Tooltip](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xoy31rxo)
+
+## Basic Usage
 
 ```jsx
 import React, { Component } from 'react'
@@ -66,8 +72,6 @@ const component = () => {
 ```
 
 ## Passing a CSS class
-
-[![Edit React Plug-N'-Go Tooltip](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xoy31rxo)
 
 ```css
 .IndianredTooltip {
@@ -112,8 +116,6 @@ const component = () => {
 ```
 
 ## Passing a custom tooltip button
-
-[![Edit React Plug-N'-Go Tooltip](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xoy31rxo)
 
 ### Note that you can also pass classes to the Tooltip as normal, or modify the default icon's fill and background.
 

@@ -1,5 +1,4 @@
 .Wrapper {
-    display: inline;
     position: absolute;
     top: 0;
     left: 50%;
@@ -21,7 +20,7 @@
     position: absolute;
     z-index: 5;
     padding: 12px 24px 12px 12px;
-    display: inline-block;
+    display: block;
     width: 380px;
     max-width: 80vw;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px;

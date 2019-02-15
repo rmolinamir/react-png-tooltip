@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import propTypes from 'prop-types'
 // Worker function
 import { isMobile as setIsMobile } from './is-mobile'
@@ -286,37 +286,40 @@ const tooltip = (props) => {
     shouldRender = true
   }
   return (
-    <div ref={myTooltip}
-      className={props.tooltip ? null : classes.Container}
-      // On mouse hover handlers.
-      onMouseOver={() => onHoverHandler(false)}
-      onMouseLeave={(event) => onHoverHandler(true, event)}>
-      <i
-        /**
-        * onMouseDown event fires before onBlur event on input. It calls event.preventDefault() to
-        * prevent onBlur from being called, and doesn't prevent the navLink click from happening,
-        * this guarantees that the NavLink will redirect on click without having to use SetTimeout
-        * or any other hack.
-        */
-        onMouseDown={event => event.preventDefault()}
-        onClick={toggleTooltip} >
-        {props.tooltip ? props.tooltip
-          : (
-            <QuestionMark fill={props.fill} background={props.background} />
-          )}
-      </i>
-      {shouldRender ? (
-        <Content
-          className={props.className}
-          setTooltip={setTooltip}
-          reference={myWrapper}
-          contentReference={myContent}
-          triangleReference={myTriangle}
-          closeTooltip={closeTooltip} >
-          {props.children}
-        </Content>)
-        : null}
-    </div>
+    useMemo(() => (
+      <div ref={myTooltip}
+        className={props.tooltip ? null : classes.Container}
+        // On mouse hover handlers.
+        onMouseOver={() => onHoverHandler(false)}
+        onMouseLeave={(event) => onHoverHandler(true, event)}>
+        <i
+          /**
+          * onMouseDown event fires before onBlur event on input. It calls event.preventDefault() to
+          * prevent onBlur from being called, and doesn't prevent the navLink click from happening,
+          * this guarantees that the NavLink will redirect on click without having to use SetTimeout
+          * or any other hack.
+          */
+          onMouseDown={event => event.preventDefault()}
+          onClick={toggleTooltip} >
+          {props.tooltip ? props.tooltip
+            : (
+              <QuestionMark fill={props.fill} background={props.background} />
+            )}
+        </i>
+        {shouldRender ? (
+          <Content
+            bIsClickingDisabled={props.shouldDisableClick}
+            className={props.className}
+            setTooltip={setTooltip}
+            reference={myWrapper}
+            contentReference={myContent}
+            triangleReference={myTriangle}
+            closeTooltip={closeTooltip} >
+            {props.children}
+          </Content>)
+          : null}
+      </div>
+    ), [bIsHidden, bIsNotHovered])
   )
 }
 

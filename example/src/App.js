@@ -9,12 +9,12 @@ export default class App extends Component {
     return (
       <div className='App'>
         <div className='TopLeft'>
-          <Tooltip background='indianred' className='IndianredTooltip'>Indianred Tooltip!</Tooltip>
+          <Tooltip shouldDisableClick background='indianred' className='IndianredTooltip'>With the clicking functionality disabled!</Tooltip>
           <br />
           This one's an indianred tooltip.
         </div>
         <div className='TopCenter'>
-          <Tooltip background='darkblue' className='GoldTooltip'>The icon and the windows can have different colours though!</Tooltip>
+          <Tooltip shouldDisableHover background='darkblue' className='GoldTooltip'>The icon and the windows can have different colours though!</Tooltip>
         </div>
         <div className='TopRight'>
           <Tooltip>

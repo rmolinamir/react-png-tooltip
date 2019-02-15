@@ -47,7 +47,8 @@ const content = (props) => {
         <div
           ref={contentRef}
           className={classes.Container}>
-          <button onClick={props.closeTooltip} type='button' className={classes.Cancel}><Cancel /></button>
+          {props.bIsClickingDisabled ? null
+            : <button onClick={props.closeTooltip} type='button' className={classes.Cancel}><Cancel /></button>}
           <div onMouseDown={(event) => event.preventDefault()} className={classes.Content}>
             {props.children}
           </div>
@@ -59,6 +60,8 @@ const content = (props) => {
 }
 
 content.propTypes = {
+  // If the tooltip clicking functionality is disabled, then avoid rendering the cancel button.
+  bIsClickingDisabled: propTypes.bool,
   // Triangle reference classes
   triangleReference: propTypes.object,
   // Wrapper content events

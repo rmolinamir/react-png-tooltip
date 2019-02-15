@@ -336,6 +336,7 @@ export default class Tooltip extends Component {
         </i>
         {shouldRender ? (
           <Content
+            bIsHoverDisabled={this.props.shouldDisableClick}
             className={this.props.className}
             reference={this.myWrapper}
             contentReference={this.myContent}
