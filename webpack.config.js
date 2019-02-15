@@ -10,7 +10,10 @@ module.exports = {
     libraryTarget: 'commonjs2'
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      react: require.resolve('react')
+    }
   },
   module: {
     rules: [
