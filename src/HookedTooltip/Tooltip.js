@@ -20,8 +20,8 @@ const tooltip = (props) => {
   const [onMouseLeaveTimeout, setMouseLeaveTimeout] = useState(null)
 
   // Initial states
-  const [bIsHidden, setIsHidden] = useState(null)
-  const [bIsNotHovered, setIsNotHovered] = useState(null)
+  const [bIsHidden, setIsHidden] = useState(true)
+  const [bIsNotHovered, setIsNotHovered] = useState(true)
 
   /**
    * Calculates in which quarter of the screen the element is at.
