@@ -268,13 +268,6 @@ const tooltip = (props) => {
   }
 
   /**
-   * Optimization, only update virtual DOM if there is a change in bIsHidden or bIsNotHovered.
-   */
-  // shouldComponentUpdate(_, nextState) {
-  //   return bIsHidden !== nextbIsHidden || bIsNotHovered !== nextbIsNotHovered
-  // }
-
-  /**
    * The tooltip content will render if bIsHidden if false or if the tooltip is not hovered.
    * This means that bIsHidden being true will have priority, which means if the user clicks the tooltip,
    * then it won't be unmounted when unhovering the tooltip.
@@ -286,6 +279,9 @@ const tooltip = (props) => {
     shouldRender = true
   }
   return (
+    /**
+     * Optimization, only update virtual DOM if there is a change in bIsHidden or bIsNotHovered.
+     */
     useMemo(() => (
       <div ref={myTooltip}
         className={props.tooltip ? null : classes.Container}

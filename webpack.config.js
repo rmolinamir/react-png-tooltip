@@ -18,10 +18,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components)/,
         use: {
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/transform-runtime']
+          }
         }
       },
       {
@@ -65,17 +69,21 @@ module.exports = {
   },
   stats: {
     colors: true,
+    errors: true,
+    errorDetails: true,
     hash: false,
     version: false,
     timings: false,
     assets: false,
     chunks: false,
+    chunkModules: false,
+    chunkOrigins: false,
+    chunkGroups: false,
     modules: false,
     reasons: false,
+    moduleTrace: false,
     children: false,
     source: false,
-    errors: false,
-    errorDetails: false,
     warnings: false,
     publicPath: false
   }
