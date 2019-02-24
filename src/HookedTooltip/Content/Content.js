@@ -9,7 +9,7 @@ const Triangle = (props) => {
   return (
     <svg
       ref={props.reference}
-      className={[classes.Triangle, props.className].join(' ')}
+      className={classes.Triangle}
       x='0px'
       y='0px'
       width='24px'
@@ -23,8 +23,6 @@ const Triangle = (props) => {
 }
 
 Triangle.propTypes = {
-  // Triangle SVG classes and reference
-  className: propTypes.any,
   reference: propTypes.object
 }
 
@@ -59,13 +57,13 @@ const content = (props) => {
         <div
           ref={contentRef}
           className={classes.Container}>
+          <Triangle reference={props.triangleReference} />
           {props.bIsClickingDisabled ? null
             : <button onClick={props.closeTooltip} type='button' className={classes.Cancel}><Cancel /></button>}
           <div onMouseDown={(event) => event.preventDefault()} className={classes.Content}>
             {props.children}
           </div>
         </div>
-        <Triangle reference={props.triangleReference} />
       </div>
     </React.Fragment>
   )

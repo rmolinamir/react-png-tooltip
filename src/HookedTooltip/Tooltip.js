@@ -47,44 +47,55 @@ const tooltip = (props) => {
    * to ensure the tooltip will be completely shown in the screen.
    */
   const smartPositioning = (quarter) => {
+    // Content spacing.
+    const contentVertical = [24, 'px'].join('')
+    const contentHorizontal = [-18, 'px'].join('')
+    // Triangle SVG spacing.
+    const triangleVertical = [100, '%'].join('')
+    const triangleHorizontal = [6, 'px'].join('')
     switch (quarter) {
       case QUARTERS.TOP_LEFT:
         // Container position
-        myContent.current.style.top = [36, 'px'].join('')
-        myContent.current.style.left = [-18, 'px'].join('')
+        myContent.current.style.top = contentVertical
+        myContent.current.style.left = contentHorizontal
         // Triangle position
-        myTriangle.current.style.top = [13, 'px'].join('')
+        myTriangle.current.style.bottom = triangleVertical
+        myTriangle.current.style.left = triangleHorizontal
         break
       case QUARTERS.TOP_RIGHT:
         // Container position
-        myContent.current.style.top = [36, 'px'].join('')
-        myContent.current.style.right = [-18, 'px'].join('')
+        myContent.current.style.top = contentVertical
+        myContent.current.style.right = contentHorizontal
         // Triangle position
-        myTriangle.current.style.top = [13, 'px'].join('')
+        myTriangle.current.style.bottom = triangleVertical
+        myTriangle.current.style.right = triangleHorizontal
         break
       case QUARTERS.BOTTOM_LEFT:
         // Container position
-        myContent.current.style.bottom = [24, 'px'].join('')
-        myContent.current.style.left = [-18, 'px'].join('')
+        myContent.current.style.bottom = contentVertical
+        myContent.current.style.left = contentHorizontal
         // Triangle position
-        myTriangle.current.style.bottom = [1, 'px'].join('')
+        myTriangle.current.style.top = triangleVertical
+        myTriangle.current.style.left = triangleHorizontal
         myTriangle.current.style.transform = 'none'
         break
       case QUARTERS.BOTTOM_RIGHT:
         // Container position
-        myContent.current.style.bottom = [24, 'px'].join('')
-        myContent.current.style.right = [-18, 'px'].join('')
+        myContent.current.style.bottom = contentVertical
+        myContent.current.style.right = contentHorizontal
         // Triangle position
-        myTriangle.current.style.bottom = [1, 'px'].join('')
+        myTriangle.current.style.top = triangleVertical
+        myTriangle.current.style.right = triangleHorizontal
         myTriangle.current.style.transform = 'none'
         break
       default:
         // Copying QUARTERS.BOTTOM_LEFT settings for the default case.
         // Container position
-        myContent.current.style.bottom = [24, 'px'].join('')
-        myContent.current.style.left = [-18, 'px'].join('')
+        myContent.current.style.bottom = contentVertical
+        myContent.current.style.left = contentHorizontal
         // Triangle position
-        myTriangle.current.style.bottom = [1, 'px'].join('')
+        myTriangle.current.style.top = triangleVertical
+        myTriangle.current.style.left = triangleHorizontal
         myTriangle.current.style.transform = 'none'
     }
   }
@@ -98,8 +109,10 @@ const tooltip = (props) => {
     if (!rect) { return } // Avoid crashes
     const viewportX = Math.max(document.documentElement.clientWidth || 0)
     const contentRect = myContent.current.getBoundingClientRect()
-    if ((contentRect.width + contentRect.left) >= viewportX) { // Right Side
-      myContent.current.style.transform = `translateX(-${contentRect.right - contentRect.width - 12}px)`
+    const overflow = (contentRect.width + contentRect.left) - viewportX
+    if (overflow >= 0) { // Right Side
+      myContent.current.style.transform = `translateX(-${overflow + 12}px)`
+      myTriangle.current.style.left = `(-${12}px)`
     } else if (contentRect.left < 0) { // Left Side
       myContent.current.style.transform = `translateX(${Math.abs(contentRect.left) + 12}px)`
     }
@@ -174,6 +187,23 @@ const tooltip = (props) => {
     }
   }
 
+  const setVisibility = (handler) => {
+    if (!myContent.current || !myTooltip.current) { return } // Protection
+    switch (handler) {
+      case 'MOUNT':
+        myTooltip.current.style.overflow = null
+        myContent.current.style.visibility = null
+        break
+      case 'UNMOUNT':
+        myTooltip.current.style.overflow = 'hidden'
+        myContent.current.style.visibility = 'hidden'
+        break
+      default:
+        myTooltip.current.style.overflow = 'hidden'
+        myContent.current.style.visibility = 'hidden'
+    }
+  }
+
   const setTooltip = (handler) => {
     switch (handler) {
       case 'MOUNT':
@@ -182,20 +212,26 @@ const tooltip = (props) => {
          */
         /**
          * If the tooltip is active, then calculate then:
-         * 1. Calculate then .focus() the wrapper element to open the tooltip.
-         * 2. Calculate the position (position: absolute coordinates).
-         * 3. Applies or removes event listeners that manage the tooltip.
+         * 1. Set the wrapper overflow and the tooltip's visibility as hidden to avoid parasitic page jumps.
+         * 2. Calculate then .focus() the wrapper element to open the tooltip.
+         * 3. Calculate the position (position: absolute coordinates).
+         * 4. Applies or removes event listeners that manage the tooltip.
+         * 5. Reset the wrapper's overflow and tooltip visibility as null to show the tooltip.
          */
-        if (!myWrapper.current) { return } // Protection
-        myWrapper.current.focus()
+        if (!myWrapper.current || !myTooltip.current) { return } // Protection
+        setVisibility('UNMOUNT') // To avoid parasitic page jumps
         calculatePosition()
         eventListenersHandler('ADD')
-        // Removes the event listener if the tooltip is being hidden.
+        myWrapper.current.focus()
+        setVisibility(handler)
         break
+      // Removes the event listener if the tooltip is being hidden.
       case 'UNMOUNT':
+        setVisibility('UNMOUNT')
         eventListenersHandler('REMOVE')
         break
       default:
+        setVisibility('UNMOUNT')
         eventListenersHandler('REMOVE')
     }
   }
@@ -278,30 +314,33 @@ const tooltip = (props) => {
   } else if (!bIsNotHovered) {
     shouldRender = true
   }
+
   return (
     /**
      * Optimization, only update virtual DOM if there is a change in bIsHidden or bIsNotHovered.
      */
     useMemo(() => (
-      <div ref={myTooltip}
-        className={props.tooltip ? null : classes.Container}
+      <span
+        /**
+        * DO NOT REMOVE THE INITIAL OVERFLOW: HIDDEN.
+        * It helps smoothing the initial tooltip mount.
+        */
+        style={{ overflow: 'hidden' }}
+        ref={myTooltip}
+        className={props.wrapperClassName ? props.wrapperClassName : classes.Wrapper}
         // On mouse hover handlers.
         onMouseOver={() => onHoverHandler(false)}
-        onMouseLeave={(event) => onHoverHandler(true, event)}>
-        <i
-          /**
-          * onMouseDown event fires before onBlur event on input. It calls event.preventDefault() to
-          * prevent onBlur from being called, and doesn't prevent the navLink click from happening,
-          * this guarantees that the NavLink will redirect on click without having to use SetTimeout
-          * or any other hack.
-          */
-          onMouseDown={event => event.preventDefault()}
-          onClick={toggleTooltip} >
-          {props.tooltip ? props.tooltip
-            : (
-              <QuestionMark fill={props.fill} background={props.background} />
-            )}
-        </i>
+        onMouseLeave={(event) => onHoverHandler(true, event)}
+        /**
+        * onMouseDown event fires before onBlur event on input. It calls event.preventDefault() to
+        * prevent onBlur from being called, and doesn't prevent the navLink click from happening,
+        * this guarantees that the NavLink will redirect on click without having to use SetTimeout
+        * or any other hack.
+        */
+        onMouseDown={event => event.preventDefault()}
+        onClick={toggleTooltip}>
+        {props.tooltip ? props.tooltip
+          : <QuestionMark fill={props.fill} background={props.background} />}
         {shouldRender ? (
           <Content
             bIsClickingDisabled={props.shouldDisableClick}
@@ -314,7 +353,7 @@ const tooltip = (props) => {
             {props.children}
           </Content>)
           : null}
-      </div>
+      </span>
     ), [bIsHidden, bIsNotHovered])
   )
 }
@@ -324,7 +363,8 @@ tooltip.propTypes = {
   tooltip: propTypes.element,
   fill: propTypes.string,
   background: propTypes.string,
-  className: propTypes.string,
+  wrapperClassName: propTypes.any,
+  className: propTypes.any,
   // Tooltip functionality
   shouldDisableHover: propTypes.bool,
   shouldDisableClick: propTypes.bool,

@@ -1,12 +1,8 @@
-.Container {
+.Wrapper {
   position: relative;
-  display: inline-flex;
-  width: 24px;
-  height: 21px;
-  justify-content: center;
-  align-items: flex-start;
+  display: table;
 }
 
-.Container svg {
+.Wrapper svg {
   cursor: pointer;
 }

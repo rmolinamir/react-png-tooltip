@@ -1,72 +1,42 @@
 .App {
   display: flex;
-  align-items: center;
+  align-items: space-between;
   justify-content: center;
-  min-height: 100vh;
+  height: 100vh;
   position: relative;
   margin: 0 auto;
+  width: 80%;
+  flex-flow: column;
 }
 
-.TopLeft {
-  position: absolute;
-  top: 24px;
-  left: 24px;
+code {
+  font-weight: bold;
+  font-size: 18px;
 }
 
-.TopCenter {
-  position: absolute;
-  top: 24px;
-  left: 50%;
-  transform: translateX(-50%);
+.Anchor {
+  position: relative;
 }
 
-.North {
+.Description {
   position: absolute;
-  top: 25%;
-  left: 50%;
-  transform: translate(-50%, -25%);
+  top: 0;
+  left: 0;
 }
 
-.TopRight {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-}
-
-.CenterLeft {
-  position: absolute;
-  top: 75%;
-  transform: translateY(-50%);
-  left: 24px;
+.Tooltips {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .Center {
   position: absolute;
-  top: 50%;
+  top: 25%;
   left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.CenterRight {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 24px;
-}
-
-.BottomLeft {
-  position: absolute;
-  bottom: 24px;
-  left: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.BottomRight {
-  position: absolute;
-  bottom: 24px;
-  right: 24px;
+  transform: translate(-50%, -25%);
 }
 
 .DarkTooltip {
