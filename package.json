@@ -1,11 +1,12 @@
 {
   "name": "react-png-tooltip",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A graphical user interface element that will render when the user hovers over (optional) or clicks  an item, a tooltip may appear with information about said item.",
   "author": "rmolinamir",
   "license": "MIT",
   "repository": "rmolinamir/react-png-tooltip",
   "main": "build/index.js",
+  "files": ["build"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack --watch",

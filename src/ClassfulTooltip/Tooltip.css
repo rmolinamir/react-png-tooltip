@@ -1,6 +1,6 @@
 .Wrapper {
   position: relative;
-  display: table;
+  display: inline-table;
 }
 
 .Wrapper svg {

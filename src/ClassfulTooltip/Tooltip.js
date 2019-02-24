@@ -80,6 +80,7 @@ export default class Tooltip extends Component {
         // Triangle position
         myTriangle.current.style.bottom = triangleVertical
         myTriangle.current.style.left = triangleHorizontal
+        myTriangle.current.style.transform = 'rotate(180deg)'
         break
       case QUARTERS.TOP_RIGHT:
         // Container position
@@ -88,6 +89,7 @@ export default class Tooltip extends Component {
         // Triangle position
         myTriangle.current.style.bottom = triangleVertical
         myTriangle.current.style.right = triangleHorizontal
+        myTriangle.current.style.transform = 'rotate(180deg)'
         break
       case QUARTERS.BOTTOM_LEFT:
         // Container position
@@ -124,16 +126,47 @@ export default class Tooltip extends Component {
    * If it's overflown, then transform the element to the left so that it'll be inside the viewport,
    * and the tooltip will be legible.
    */
-  watchOverflow = (rect) => {
-    if (!rect) { return } // Avoid crashes
+  watchOverflow = () => {
     const viewportX = Math.max(document.documentElement.clientWidth || 0)
     const contentRect = this.myContent.current.getBoundingClientRect()
-    const overflow = (contentRect.width + contentRect.left) - viewportX
-    if (overflow >= 0) { // Right Side
-      this.myContent.current.style.transform = `translateX(-${overflow + 12}px)`
+    const overflowX = (contentRect.width + contentRect.left) - viewportX
+    let bIsOverflownX = false
+    if (overflowX >= 0) { // Right Side
+      this.myContent.current.style.transform = `translateX(-${overflowX + 12}px)`
       this.myTriangle.current.style.left = `(-${12}px)`
+      bIsOverflownX = true
     } else if (contentRect.left < 0) { // Left Side
       this.myContent.current.style.transform = `translateX(${Math.abs(contentRect.left) + 12}px)`
+      bIsOverflownX = true
+    }
+    /**
+     * If overflown from the top, then move the tooltip down until it's inside the viewport.
+     * The triangle SVG will be hidden since it won't point to the tooltip.
+     */
+    if (contentRect.top < 0) {
+      this.myContent.current.style.transform = `translateY(${Math.abs(contentRect.top) + 12}px)`
+      this.myTriangle.current.style.visibility = 'hidden'
+    }
+    /**
+     * If overflown on the X axis, then move the triangle so that it'll point
+     * to the tootip, while keeping the transform rotate property if it exists.
+     */
+    if (bIsOverflownX) {
+      const tooltipRect = this.myTooltip.current.getBoundingClientRect()
+      const triangleRect = this.myTriangle.current.getBoundingClientRect()
+      /**
+       * We need the middle point of the tooltip and the triangle, to make sure
+       * that we will be translating the triangle to the center of the tooltip,
+       * so that it will align perfectly.
+       */
+      const tooltipXMidPoint = tooltipRect.left + ((tooltipRect.right - tooltipRect.left) / 2)
+      const triangleXMidPoint = triangleRect.left + ((triangleRect.right - triangleRect.left) / 2)
+      const distance = tooltipXMidPoint - triangleXMidPoint
+      if (String(this.myTriangle.current.style.cssText).includes('rotate')) {
+        this.myTriangle.current.style.transform = `translateX(${distance}px) rotate(180deg)`
+      } else {
+        this.myTriangle.current.style.transform = `translateX(${distance}px)`
+      }
     }
   }
 
@@ -149,7 +182,7 @@ export default class Tooltip extends Component {
     const rect = this.myContent.current.getBoundingClientRect()
     const quarter = this.calculateQuarter(rect, viewportX, viewportY)
     this.smartPositioning(quarter)
-    this.watchOverflow(rect)
+    this.watchOverflow()
     /**
      * Finally although not having to do anything with positioning, we set the triangle SVG fill EQUAL
      * to the background color of the content window of the tooltip.

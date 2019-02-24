@@ -72,7 +72,6 @@
   width: auto!important;
   height: auto!important;
   z-index: 10;
-  transform: rotate(180deg);
   fill: inherit;
 }
 
