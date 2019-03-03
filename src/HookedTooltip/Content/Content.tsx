@@ -1,11 +1,15 @@
-import React, { useEffect } from 'react'
-import propTypes from 'prop-types'
+import * as React from 'react'
+const { useEffect } = React
 // CSS
 import classes from './Content.css'
 // JSX
 import Cancel from '../SVG/cancel'
 
-const Triangle = (props) => {
+interface ITriangleProps {
+  reference?: React.RefObject<SVGSVGElement>
+}
+
+const Triangle = (props: ITriangleProps) => {
   return (
     <svg
       ref={props.reference}
@@ -14,19 +18,36 @@ const Triangle = (props) => {
       y='0px'
       width='24px'
       height='24px'
-      viewBox='0 0 20 20'
-      style={{ enableBackground: 'new 0 0 20 20' }}>
+      viewBox='0 0 20 20'>
       <path fill='inherit' d='M0,0 20,0 10,10z' />
       <path fill='transparent' stroke='#E6E6E6' d='M0,0 10,10 20,0' />
     </svg>
   )
 }
 
-Triangle.propTypes = {
-  reference: propTypes.object
+interface IContentProps {
+  // If the tooltip clicking functionality is disabled, then avoid rendering the cancel button.
+  bIsClickingDisabled?: boolean
+  /**
+   * Function that will execute after mounting and before unmounting to calculate position
+  /* and handle event listeners
+   */
+  setTooltip: (handler:string) => void
+  // Triangle reference
+  triangleReference: React.RefObject<SVGSVGElement>
+  // Wrapper content events
+  closeTooltip: () => void
+  // Wrapper classes
+  className?: string
+  style?: React.CSSProperties
+  // Wrapper reference
+  reference: React.RefObject<HTMLDivElement>
+  // Content reference
+  contentReference: React.RefObject<HTMLDivElement>
+  children?: any
 }
 
-const content = (props) => {
+const content = (props: IContentProps) => {
   useEffect(() => {
     // Calculates position and adds event listeners after mounting.
     if (props.setTooltip) {
@@ -50,7 +71,8 @@ const content = (props) => {
 
   return (
     <React.Fragment>
-      <div tabIndex='1'
+      <div 
+        tabIndex={1}
         ref={props.reference}
         className={wrapperClasses.join(' ')}
         style={props.style}>
@@ -67,28 +89,6 @@ const content = (props) => {
       </div>
     </React.Fragment>
   )
-}
-
-content.propTypes = {
-  // If the tooltip clicking functionality is disabled, then avoid rendering the cancel button.
-  bIsClickingDisabled: propTypes.bool,
-  /**
-   * Function that will execute after mounting and before unmounting to calculate position
-  /* and handle event listeners
-   */
-  setTooltip: propTypes.func,
-  // Triangle reference classes
-  triangleReference: propTypes.object,
-  // Wrapper content events
-  closeTooltip: propTypes.func,
-  // Wrapper classes
-  className: propTypes.any,
-  style: propTypes.object,
-  // Wrapper reference
-  reference: propTypes.object,
-  // Content reference
-  contentReference: propTypes.object,
-  children: propTypes.any
 }
 
 export default content

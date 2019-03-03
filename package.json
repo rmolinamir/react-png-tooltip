@@ -1,10 +1,10 @@
 {
-  "name": "react-png-ts-component",
+  "name": "react-png-tooltip",
   "version": "1.0.0",
   "description": "",
   "author": "rmolinamir",
   "license": "MIT",
-  "repository": "rmolinamir/react-png-ts-component",
+  "repository": "rmolinamir/react-png-tooltip",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
