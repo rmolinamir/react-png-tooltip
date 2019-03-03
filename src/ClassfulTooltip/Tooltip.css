@@ -1,8 +1,0 @@
-.Wrapper {
-  position: relative;
-  display: inline-table;
-}
-
-.Wrapper svg {
-  cursor: pointer;
-}
