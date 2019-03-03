@@ -1,4 +1,5 @@
-import React, { useState, useRef, useMemo } from 'react'
+import * as React from 'react'
+const { useState, useRef, useMemo } = React
 import propTypes from 'prop-types'
 // Worker function
 import { isMobile as setIsMobile } from './is-mobile'
@@ -7,6 +8,32 @@ import classes from './Tooltip.css'
 // JSX
 import QuestionMark from './SVG/question-mark'
 import Content from './Content/Content'
+
+interface ITooltipProps {
+  // Tooltip propTypes (style and JSX element replacement)
+  tooltip: propTypes.element;
+  fill: propTypes.string;
+  background: propTypes.string;
+  wrapperClassName: propTypes.any;
+  className: propTypes.any;
+  // Tooltip functionality
+  shouldDisableHover: propTypes.bool;
+  shouldDisableClick: propTypes.bool;
+  children: propTypes.any
+}
+
+tooltip.propTypes = {
+  // Tooltip propTypes (style and JSX element replacement)
+  tooltip: propTypes.element,
+  fill: propTypes.string,
+  background: propTypes.string,
+  wrapperClassName: propTypes.any,
+  className: propTypes.any,
+  // Tooltip functionality
+  shouldDisableHover: propTypes.bool,
+  shouldDisableClick: propTypes.bool,
+  children: propTypes.any
+}
 
 const tooltip = (props) => {
   // Boolean, true if on a mobile device.
@@ -390,19 +417,6 @@ const tooltip = (props) => {
       </span>
     ), [bIsHidden, bIsNotHovered])
   )
-}
-
-tooltip.propTypes = {
-  // Tooltip propTypes (style and JSX element replacement)
-  tooltip: propTypes.element,
-  fill: propTypes.string,
-  background: propTypes.string,
-  wrapperClassName: propTypes.any,
-  className: propTypes.any,
-  // Tooltip functionality
-  shouldDisableHover: propTypes.bool,
-  shouldDisableClick: propTypes.bool,
-  children: propTypes.any
 }
 
 /**
