@@ -140,6 +140,12 @@ const tooltip = (props: ITooltipProps) => {
       myTriangle.current.style.visibility = 'hidden'
     }
     /**
+     * Apply transform styling.
+     */
+    if (bIsOverflownX || bIsOverflownY) {
+      myContent.current.style.transform = transformArray.join(' ')
+    }
+    /**
      * If overflown on the X axis, then move the triangle so that it'll point
      * to the tootip, while keeping the transform rotate property if it exists.
      */
@@ -159,12 +165,6 @@ const tooltip = (props: ITooltipProps) => {
       } else {
         myTriangle.current.style.transform = `translateX(${distance}px)`
       }
-    }
-    /**
-     * Apply transform styling.
-     */
-    if (bIsOverflownX || bIsOverflownY) {
-      myContent.current.style.transform = transformArray.join(' ')
     }
   }
 
