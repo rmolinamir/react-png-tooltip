@@ -16,7 +16,7 @@ npm install --save react-png-tooltip
 
 ![Alt Text](https://media.giphy.com/media/2vqa3lTKgTXjPs2TPK/giphy.gif)
 
-### Anything Goes!
+### Anything Goes
 
 ![Alt Text](https://media.giphy.com/media/5wFUxVXPVin00YoI8x/giphy.gif)
 
@@ -24,13 +24,13 @@ npm install --save react-png-tooltip
 
 1. Export the tooltip from the 'react-png-tooltip' and you're good to go!
 2. The tooltip will open after:
-- Clicking (or touching) the tooltip button.
-- Hovering over the tooltip button.
+    - Clicking (or touching) the tooltip button.
+    - Hovering over the tooltip button.
 3. The tooltip will close after:
-- Pressing the ESC key on desktop.
-- Clicking (or touching) anywhere on the screen unless it's inside the tooltip window.
-- Clicking (or touching) the X button inside the tooltip window.
-- On mouse leave IF the user has not clicked the tooltip (meaning, if the user was only hovering), in which case the user would have to click the cancel button, the ESC key, or anywhere on the screen to close the tooltip.
+    - Pressing the ESC key on desktop.
+    - Clicking (or touching) anywhere on the screen unless it's inside the tooltip window.
+    - Clicking (or touching) the X button inside the tooltip window.
+    - On mouse leave IF the user has not clicked the tooltip (meaning, if the user was only hovering), in which case the user would have to click the cancel button, the ESC key, or anywhere on the screen to close the tooltip.
 
 ## Features
 
@@ -80,9 +80,9 @@ const component = () => {
 
 ```css
 .IndianredTooltip {
-  background-color: #cd5c5c !important;
-  color: #FFF !important;
-  fill: #FFF !important;
+  background-color: #cd5c5c;
+  color: #FFF;
+  fill: #FFF;
 }
 ```
 

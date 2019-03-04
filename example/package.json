@@ -1,20 +1,21 @@
 {
   "name": "example",
-  "version": "0.1.0",
+  "homepage": "https://rmolinamir.github.io/react-png-ts-component",
+  "version": "0.0.0",
+  "license": "MIT",
   "private": true,
   "dependencies": {
+    "prop-types": "^15.6.2",
     "react": "file:../node_modules/react",
     "react-dom": "file:../node_modules/react-dom",
-    "react-scripts": "file:../node_modules/react-scripts"
+    "react-scripts": "^2.1.5",
+    "react-png-tooltip": "file:.."
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": [
     ">0.2%",

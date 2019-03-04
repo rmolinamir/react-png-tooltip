@@ -40,27 +40,27 @@ code {
 }
 
 .DarkTooltip {
-  background-color: #333 !important;
-  color: #FFF !important;
-  fill: #FFF !important;
+  background-color: #333;
+  color: #FFF;
+  fill: #FFF;
 }
 
 .IndianredTooltip {
-  background-color: #cd5c5c !important;
-  color: #FFF !important;
-  fill: #FFF !important;
+  background-color: #cd5c5c;
+  color: #FFF;
+  fill: #FFF;
 }
 
 .GoldTooltip {
-  background-color: gold !important;
-  color: #FFF !important;
-  fill: #FFF !important;
+  background-color: gold;
+  color: #FFF;
+  fill: #FFF;
 }
 
 .OrangeTooltip {
-  background-color: #ff7043 !important;
-  color: #FFF !important;
-  fill: #FFF !important;
+  background-color: #ff7043;
+  color: #FFF;
+  fill: #FFF;
 }
 
 .CustomButton {

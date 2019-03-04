@@ -6,7 +6,10 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
-  animation: fade-in ease 150ms;
+  animation: fade-in ease 350ms;
+}
+
+.Default {
   background-color: #FFFFFF;
   border-color: rgb(235, 235, 235);
   color: #484848;
@@ -77,9 +80,12 @@
 
 @keyframes fade-in {
   0% {
-      opacity: 0;
+    opacity: 0;
+  }
+  66% {
+    opacity: 0;
   }
   100% {
-      opacity: 1;
+    opacity: 1;
   }
 }

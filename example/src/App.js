@@ -15,14 +15,12 @@ export default class App extends Component {
               <span className='Description'>This one's an indianred tooltip with <code>shouldDisableClick</code> active.</span>
             </div>
           </div>
-          
           <div>
             <Tooltip shouldDisableHover background='darkblue' className='GoldTooltip'>The icon and the windows can have different colours though!</Tooltip>
             <div className='Anchor'>
               <span className='Description'>This tooltip has <code>shouldDisableHover</code> active.</span>
             </div>
           </div>
-
           <div>
             <Tooltip>
               <img src='https://media0.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif?cid=3640f6095c64ef4962526264678e1c1c' alt='' />
@@ -42,23 +40,20 @@ export default class App extends Component {
               If on mobile it'll tend to be centered inside the viewport.
             </Tooltip>
           </div>
-
           <div>
             <Tooltip className='OrangeTooltip' tooltip={<button className='CustomButton'>You can also use your own buttons as props.</button>}>
               And it still works as you'd expect!
             </Tooltip>
           </div>
-          
           <div>
             <Tooltip className='OrangeTooltip' background='#ff7043'>
-              <iframe 
-                  title='rickroll'
-                  type="text/html" 
-                  width='100%'
-                  height='400px'
-                  src="https://www.youtube.com/embed/DLzxrzFCyOs?autoplay=1"
-                  frameBorder="0">
-              </iframe>
+              <iframe
+                title='rickroll'
+                type='text/html'
+                width='100%'
+                height='400px'
+                src='https://www.youtube.com/embed/DLzxrzFCyOs?autoplay=1'
+                frameBorder='0' />
             </Tooltip>
           </div>
 
@@ -72,21 +67,20 @@ export default class App extends Component {
         <div className='Tooltips'>
           <div>
             <Tooltip background='skyblue' fill='white' className='DarkTooltip'>Dark Tooltip!</Tooltip>
-            <span style={{zIndex: -1}}>This one's a dark tooltip!</span>
+            <span style={{ zIndex: -1 }}>This one's a dark tooltip!</span>
           </div>
-
           <div>
             <Tooltip className='OrangeTooltip' background='#ff7043'>
               I just don't know what other colors to use!
-              <br/>
+              <br />
               Hope this component will be of any use to you, cheers! If you find any bugs, just let me know at:
-              <br/>
+              <br />
               <strong>
                 <a
-                  style={{color: 'white'}} 
+                  style={{ color: 'white' }}
                   href='https://github.com/rmolinamir'
                   target='_blank'
-                  rel="noopener noreferrer">
+                  rel='noopener noreferrer'>
                   https://github.com/rmolinamir
                 </a>
               </strong>
