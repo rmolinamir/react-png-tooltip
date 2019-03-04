@@ -343,8 +343,8 @@ const tooltip = (props: ITooltipProps) => {
     }
   }
 
-  // Close the tooltip when the ESC is pressed.
-  const escFunction = (event:KeyboardEvent) => {
+  // Close the tooltip when the ESC key is pressed.
+  const escFunction = (event: KeyboardEvent) => {
     if (event.keyCode === 27) {
       closeTooltip()
     }
