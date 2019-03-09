@@ -1,6 +1,6 @@
 {
   "name": "react-png-tooltip",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "A graphical user interface element that will render when the user hovers over (optional) or clicks  an item, a tooltip may appear with information about said item.",
   "author": "rmolinamir",
   "license": "MIT",
