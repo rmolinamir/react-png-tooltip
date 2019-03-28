@@ -1,17 +1,29 @@
 import * as React from 'react'
-const { useState, useRef, useMemo, useEffect } = React
+const { useRef, useMemo, useEffect } = React
 import { EMountHandlers, EQuarters } from './enums';
 // Worker function
-import { isMobile as setIsMobile } from './is-mobile'
+import { isMobile as setisMobile } from './is-mobile'
 // CSS
 import classes from './Tooltip.css'
 // JSX
 import QuestionMark from './SVG/question-mark'
 import Content from './Content/Content'
 
+enum ETooltipHandlers {
+  CLEARTIMEOUT,
+  SETTIMEOUT,
+  CLOSETOOLTIP,
+  HIDDEN,
+  HOVERED
+}
+
 enum EEventListenersHandlers {
   ADD,
   REMOVE
+}
+
+interface IReducerAction extends ITooltipState {
+  handler: ETooltipHandlers
 }
 
 interface ITooltipProps {
@@ -22,25 +34,75 @@ interface ITooltipProps {
   wrapperClassName: string
   className: string
   // Tooltip functionality
+  timeoutDelay: number
   shouldDisableHover: boolean
   shouldDisableClick: boolean
+  // React Children
   children: React.ReactNode
 }
 
+interface ITooltipState {
+  isMobile: boolean
+  onMouseLeaveTimeout?: NodeJS.Timeout
+  timeoutDelay: number
+  bIsHidden: boolean
+  bIsNotHovered: boolean
+}
+
+const reducer = (state: ITooltipState, action: IReducerAction) => {
+  const { handler, ...newState } = action
+  switch (handler) {
+    case ETooltipHandlers.CLEARTIMEOUT:
+      state.onMouseLeaveTimeout && clearTimeout(state.onMouseLeaveTimeout)
+      return {
+        ...state,
+        onMouseLeaveTimeout: undefined
+      }
+    case ETooltipHandlers.SETTIMEOUT:
+      setTimeout(() => {
+        return {
+          ...state,
+          bIsNotHovered: newState.bIsNotHovered
+        }
+      }, state.timeoutDelay)
+    case ETooltipHandlers.CLOSETOOLTIP:
+      return {
+        ...state,
+        bIsHidden: true,
+        bIsNotHovered: true
+      }
+    case ETooltipHandlers.HIDDEN:
+      return {
+        ...state,
+        bIsHidden: newState.bIsHidden
+      }
+    case ETooltipHandlers.HOVERED:
+      return {
+        ...state,
+        bIsNotHovered: newState.bIsNotHovered
+      }
+    default:
+      throw new Error()
+  }
+}
+const initialState = {
+  isMobile: setisMobile(),
+  onMouseLeaveTimeout: undefined,
+  timeoutDelay: 100,
+  bIsHidden: true,
+  bIsNotHovered: true
+}
+
 const tooltip = (props: ITooltipProps) => {
-  // Boolean, true if on a mobile device.
-  const [isMobile] = useState(setIsMobile())
+  initialState.timeoutDelay = props.timeoutDelay || 100
+
   // References, needed to calculate initial position when rendering.
   const myTooltip = useRef<HTMLSpanElement>(null)
   const myWrapper= useRef<HTMLDivElement>(null)
   const myContent= useRef<HTMLDivElement>(null)
   const myTriangle= useRef<SVGSVGElement>(null)
-  // Hover timeout to unmount tooltip.
-  const [onMouseLeaveTimeout, setMouseLeaveTimeout] = useState()
 
-  // Initial states
-  const [bIsHidden, setIsHidden] = useState(true)
-  const [bIsNotHovered, setIsNotHovered] = useState(true)
+  const [state, dispatch] = React.useReducer(reducer, initialState)
 
   /**
    * Calculates in which quarter of the screen the element is at.
@@ -200,20 +262,20 @@ const tooltip = (props: ITooltipProps) => {
    */
   useEffect(() => {
     window.addEventListener('resize', closeTooltip)
-    if (isMobile) {
+    if (state.isMobile) {
       window.addEventListener('orientationchange', closeTooltip)
     }
     // on Unmount
     return () => {
       // Remove any event listener that might be active.
-      if (isMobile) {
+      if (state.isMobile) {
         window.removeEventListener('orientationchange', closeTooltip)
       }
       window.removeEventListener('resize', closeTooltip)
       // Document event listeners.
       eventListenersHandler(EEventListenersHandlers.REMOVE)
       // Clearing timeout on mouse leave event.
-      clearTimeout(onMouseLeaveTimeout)
+      dispatch({ handler: ETooltipHandlers.CLEARTIMEOUT } as IReducerAction)
     }
   }, [])
 
@@ -223,17 +285,17 @@ const tooltip = (props: ITooltipProps) => {
   const eventListenersHandler = (handler: EEventListenersHandlers):void => {
     switch (handler) {
       case EEventListenersHandlers.ADD:
-        if (isMobile) {
+        if (state.isMobile) {
           document.addEventListener('touchend', outsideClickListener)
-        } else if (!isMobile) {
+        } else if (!state.isMobile) {
           document.addEventListener('click', outsideClickListener)
           document.addEventListener('keydown', escFunction, false)
         }
         break
       case EEventListenersHandlers.REMOVE:
-        if (isMobile) {
+        if (state.isMobile) {
           document.removeEventListener('touchend', outsideClickListener)
-        } else if (!isMobile) {
+        } else if (!state.isMobile) {
           document.removeEventListener('click', outsideClickListener)
           document.removeEventListener('keydown', escFunction, false)
         }
@@ -287,15 +349,17 @@ const tooltip = (props: ITooltipProps) => {
   /**
    * If the user is hovering the tooltip then open it, otherwise close it UNLESS the user clicked on the tooltip.
    */
-  const onHoverHandler = (handler:boolean, event:any) => {
+  const onHoverHandler = (handler:boolean, event?: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     // Disabled on mobile devices (no hover) or if the shouldDisableHover prop is true.
-    if (isMobile || props.shouldDisableHover) { return }
+    if (state.isMobile || props.shouldDisableHover) { return }
     if (!handler) {
       // Clearing timeout on mouse leave event.
-      clearTimeout(onMouseLeaveTimeout)
-      setMouseLeaveTimeout(undefined)
-      setIsNotHovered(handler)
-    } else {
+      dispatch({ handler: ETooltipHandlers.CLEARTIMEOUT } as IReducerAction)
+      dispatch({ handler: ETooltipHandlers.HOVERED, bIsNotHovered: handler } as IReducerAction)
+    /**
+     * Only dismount if the tooltip is not opened by a click.
+     */
+    } else if (state.bIsHidden) {
       /**
        * Event persist is called to avoid receiving null events if the component dismounts.
        * We declare X and Y positions to know where is the mouse pointer hovering. The result of this
@@ -304,17 +368,13 @@ const tooltip = (props: ITooltipProps) => {
        * over the tooltip bIsHoveringTooltip will be true and the tooltip won't be dismounted, however
        * if the user pulls the mouse away from the tooltip the tooltip will be dismounted.
        */
-      if (myTooltip.current) {
+      if (event && myTooltip.current) {
         event.persist()
         const x = event.clientX
         const y = event.clientY
         const bIsHoveringTooltip = myTooltip.current.contains(document.elementFromPoint(x, y))
         if (!bIsHoveringTooltip) {
-          setMouseLeaveTimeout(
-            setTimeout(() => {
-              setIsNotHovered(handler)
-            }, 100)
-          )
+          dispatch({ handler: ETooltipHandlers.SETTIMEOUT, bIsNotHovered: handler } as IReducerAction)
         }
       }
     }
@@ -323,14 +383,13 @@ const tooltip = (props: ITooltipProps) => {
   const toggleTooltip = () => {
     // Disabled if the shouldDisableHover prop is true.
     if (props.shouldDisableClick) { return }
-    setIsHidden(!bIsHidden)
+    dispatch({ handler: ETooltipHandlers.HIDDEN, bIsHidden: !state.bIsHidden } as IReducerAction)
   }
 
   const closeTooltip = () => {
     // Disabled if the shouldDisableHover prop is true.
     if (props.shouldDisableClick) { return }
-    setIsHidden(true)
-    setIsNotHovered(true)
+    dispatch({ handler: ETooltipHandlers.CLOSETOOLTIP } as IReducerAction)
   }
 
   /**
@@ -361,9 +420,9 @@ const tooltip = (props: ITooltipProps) => {
    * then it won't be unmounted when unhovering the tooltip.
    */
   let shouldRender = false
-  if (!bIsHidden) {
+  if (!state.bIsHidden) {
     shouldRender = true
-  } else if (!bIsNotHovered) {
+  } else if (!state.bIsNotHovered) {
     shouldRender = true
   }
 
@@ -381,14 +440,14 @@ const tooltip = (props: ITooltipProps) => {
         ref={myTooltip}
         className={props.wrapperClassName ? props.wrapperClassName : classes.Wrapper}
         // On mouse hover handlers.
-        onMouseOver={() => onHoverHandler(false, null)}
+        onMouseOver={() => onHoverHandler(false)}
         onMouseLeave={(event) => onHoverHandler(true, event)}
         onClick={toggleTooltip}>
         {props.tooltip ? props.tooltip
           : <QuestionMark fill={props.fill} background={props.background} />}
         {shouldRender ? (
           <Content
-            bIsOpenedByClick={!bIsHidden}
+            bIsOpenedByClick={!state.bIsHidden}
             bIsClickingDisabled={props.shouldDisableClick}
             className={props.className}
             setTooltip={setTooltip}
@@ -400,7 +459,7 @@ const tooltip = (props: ITooltipProps) => {
           </Content>)
           : null}
       </span>
-    ), [bIsHidden, bIsNotHovered])
+    ), [state.bIsHidden, state.bIsNotHovered])
   )
 }
 
