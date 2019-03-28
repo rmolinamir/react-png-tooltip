@@ -7,6 +7,8 @@ import classes from './Content.css'
 import Cancel from '../SVG/cancel'
 
 interface IContentProps {
+  // If the tooltip was opened by a click, then `bIsOpenedByClick` is true.
+  bIsOpenedByClick?: boolean
   // If the tooltip clicking functionality is disabled, then avoid rendering the cancel button.
   bIsClickingDisabled?: boolean
   /**
@@ -58,8 +60,9 @@ const content = (props: IContentProps) => {
           ref={contentRef}
           className={classes.Container}>
           <Triangle reference={props.triangleReference} />
-          {props.bIsClickingDisabled ? null
-            : <button onClick={props.closeTooltip} type='button' className={classes.Cancel}><Cancel /></button>}
+          {props.bIsClickingDisabled ? 
+            null
+            : props.bIsOpenedByClick && <button onClick={props.closeTooltip} type='button' className={classes.Cancel}><Cancel /></button>}
           <div onMouseDown={(event) => event.preventDefault()} className={classes.Content}>
             {props.children}
           </div>

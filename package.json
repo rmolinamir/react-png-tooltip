@@ -63,5 +63,13 @@
   },
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "react",
+    "png-ui",
+    "tooltip",
+    "responsive",
+    "library",
+    "component"
   ]
 }

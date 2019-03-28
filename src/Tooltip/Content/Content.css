@@ -25,7 +25,7 @@
 .Container {
   position: absolute;
   z-index: 5;
-  padding: 12px 24px 12px 12px;
+  padding: 12px 32px 12px 12px;
   display: block;
   width: 380px;
   max-width: 80vw;
@@ -56,7 +56,6 @@
 }
 
 .Content {
-  padding-right: 21px;
   overflow-wrap: break-word;
   font-size: 15px;
   font-weight: 400;

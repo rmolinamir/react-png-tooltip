@@ -9,6 +9,11 @@ import classes from './Tooltip.css'
 import QuestionMark from './SVG/question-mark'
 import Content from './Content/Content'
 
+enum EEventListenersHandlers {
+  ADD,
+  REMOVE
+}
+
 interface ITooltipProps {
   // Tooltip propTypes (style and JSX element replacement)
   tooltip: React.ReactNode
@@ -24,8 +29,8 @@ interface ITooltipProps {
 
 const tooltip = (props: ITooltipProps) => {
   // Boolean, true if on a mobile device.
-  const isMobile = setIsMobile()
-  // References, cries in React Hooks.
+  const [isMobile] = useState(setIsMobile())
+  // References, needed to calculate initial position when rendering.
   const myTooltip = useRef<HTMLSpanElement>(null)
   const myWrapper= useRef<HTMLDivElement>(null)
   const myContent= useRef<HTMLDivElement>(null)
@@ -206,7 +211,7 @@ const tooltip = (props: ITooltipProps) => {
       }
       window.removeEventListener('resize', closeTooltip)
       // Document event listeners.
-      eventListenersHandler('REMOVE')
+      eventListenersHandler(EEventListenersHandlers.REMOVE)
       // Clearing timeout on mouse leave event.
       clearTimeout(onMouseLeaveTimeout)
     }
@@ -215,9 +220,9 @@ const tooltip = (props: ITooltipProps) => {
   /**
    * Adds or removes event listeners, depending if on a mobile or on a desktop.
    */
-  const eventListenersHandler = (handler: string):void => {
+  const eventListenersHandler = (handler: EEventListenersHandlers):void => {
     switch (handler) {
-      case 'ADD':
+      case EEventListenersHandlers.ADD:
         if (isMobile) {
           document.addEventListener('touchend', outsideClickListener)
         } else if (!isMobile) {
@@ -225,7 +230,7 @@ const tooltip = (props: ITooltipProps) => {
           document.addEventListener('keydown', escFunction, false)
         }
         break
-      case 'REMOVE':
+      case EEventListenersHandlers.REMOVE:
         if (isMobile) {
           document.removeEventListener('touchend', outsideClickListener)
         } else if (!isMobile) {
@@ -267,14 +272,14 @@ const tooltip = (props: ITooltipProps) => {
         if (!myWrapper.current || !myTooltip.current) { return } // Protection
         setVisibility(EMountHandlers.UNMOUNT) // To avoid parasitic page jumps
         calculatePosition()
-        eventListenersHandler('ADD')
+        eventListenersHandler(EEventListenersHandlers.ADD)
         myWrapper.current.focus()
         setVisibility(handler)
         break
       // Removes the event listener if the tooltip is being hidden.
       case EMountHandlers.UNMOUNT:
         setVisibility(handler)
-        eventListenersHandler('REMOVE')
+        eventListenersHandler(EEventListenersHandlers.REMOVE)
         break
     }
   }
@@ -383,6 +388,7 @@ const tooltip = (props: ITooltipProps) => {
           : <QuestionMark fill={props.fill} background={props.background} />}
         {shouldRender ? (
           <Content
+            bIsOpenedByClick={!bIsHidden}
             bIsClickingDisabled={props.shouldDisableClick}
             className={props.className}
             setTooltip={setTooltip}
