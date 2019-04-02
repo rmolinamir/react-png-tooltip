@@ -56,7 +56,7 @@ Props                   |         Functionality
 `wrapperClassName`      |         You may change the wrapper CSS class if you don't like the default one (`display: inline-table; position: 'relative'`), the wrapper is the outer div that wraps the whole tooltip (content and icon). **Make sure you set position relative if you decide to change the wrapperClassName, or else the positioning may be problematic**.
 `className`             |         You can use your own desired CSS class for the tooltip window by passing said class as a prop, pass them with the `!important` tag to overwrite the default ones, **however, it is highly advised to only modify background-color, color, fill, border-colors, etc (aesthetics). Modifying width nor any similar properties is not recommended as of now.** Usage examples below.
 
-## CodeSandbox
+## [Showcase](https://www.robertmolina.dev/codelab/react-png-tooltip)
 
 [![Edit React Plug-N'-Go Tooltip](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xoy31rxo)
 
